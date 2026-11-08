@@ -1,259 +1,191 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso al Sistema</title>
+<html>
+  <head>
+    <noscript>
+      &lt;title&gt;Pardon Our Interruption&lt;/title&gt;
+    </noscript>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #001f3f; /* Azul Marino */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+      .container {
+            max-width: 800px;
+            margin: auto;
+            font-family: &#39;Helvetica Neue&#39;,Helvetica,Arial,sans-serif;
+            color: #7a838c;
         }
-        .container {
-            background-color: #ffffff; /* Blanco */
-            padding: 35px 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 360px;
-            box-sizing: border-box;
-            border-top: 5px solid #001122;
-            text-align: center;
-        }
-        h2 {
-            margin-top: 0;
-            color: #001f3f; /* Azul Marino */
-            font-size: 22px;
-            margin-bottom: 25px;
-        }
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            color: #001f3f;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-            background-color: #f8fafc;
-            color: #1e293b;
-            transition: border-color 0.2s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #001f3f;
-            background-color: #ffffff;
-        }
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            cursor: pointer;
-            color: #64748b;
-            font-size: 18px;
-            user-select: none;
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #001f3f; /* Azul Marino */
-            color: white; /* Blanco */
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #001122;
-        }
-        button:disabled {
-            background-color: #94a3b8;
-            cursor: not-allowed;
-        }
-        .step {
-            display: none;
-        }
-        .step.active {
-            display: block;
-        }
-        .instruction-text {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        /* --- ANIMACIONES --- */
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #001f3f;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .clock-container {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            border: 4px solid #001f3f;
-            border-radius: 50%;
-            margin: 20px auto;
-            background-color: #ffffff;
-        }
-        .clock-hand {
-            position: absolute;
-            width: 4px;
-            background-color: #001f3f;
-            border-radius: 2px;
-            transform-origin: bottom center;
-            left: calc(50% - 2px);
-        }
-        .hour-hand {
-            height: 14px;
-            top: 16px;
-            animation: rotateHand 12s linear infinite;
-        }
-        .minute-hand {
-            height: 20px;
-            top: 10px;
-            animation: rotateHand 1s linear infinite;
-        }
-        @keyframes rotateHand {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        h1 { color: #2a2d30; font-weight: 500; }
+        li { margin: 0 0 10px; }
+        a { color: #428bca; }
+        a:hover, a:focus { color: #2a6496; }
     </style>
-</head>
-<body>
+    <script>
+      window.reeseSkipExpirationCheck = true;
+      const isSpa = new URLSearchParams(window.location.search).get(&#39;X-SPA&#39;) === &#39;1&#39; || window.isImpervaSpaSupport;
+      const isInterstitial = new URLSearchParams(window.location.search).get(&#39;X-SPA-INTERSTITIAL&#39;) === &#39;1&#39;;
+      let referrer = &#39;&#39;;
 
-<div class="container">
-    <!-- PASO 1: LOGIN -->
-    <div id="step1" class="step active">
-        <h2>Ingreso al Sistema</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" required placeholder="Ej. correo o identificación">
-            </div>
-            
-            <div class="input-group">
-                <label for="contrasena">Contraseña</label>
-                <div class="password-wrapper">
-                    <input type="password" id="contrasena" required placeholder="Introduce tu clave">
-                    <span class="toggle-password" id="eyeIcon">👁️‍🗨️</span>
-                </div>
-            </div>
-            
-            <button type="submit" id="btnSiguiente">Siguiente</button>
-        </form>
-    </div>
+      //skip auto-load for isInterstitial - prevents initializeProtection to be called automatically
+      if (isSpa &amp;&amp; isInterstitial) {
+        window.reeseSkipAutoLoad = true;
+      }
+      try {
+        referrer = new URL(document.referrer).origin;
+      } catch (e) {
+        referrer = &#39;&#39;;
+      }
+    </script>
+    <!-- This head template should be placed before the following script tag that loads the challenge script -->
+    <script>
+      if (isSpa &amp;&amp; isInterstitial) {
+        let protectionReady = false;
+        let tokenFromMessage = null;
 
-    <!-- PASO 2: CÓDIGO DE VERIFICACIÓN -->
-    <div id="step2" class="step">
-        <h2>Verificación de Seguridad</h2>
-        <p class="instruction-text">Por favor, pon el código de 6 dígitos que hemos enviado a tu correo o número de celular para continuar.</p>
-        
-        <form id="codeForm">
-            <div class="input-group">
-                <input type="text" id="codigoVerificacion" inputmode="numeric" pattern="\d*" maxlength="6" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 8px;">
-            </div>
-            
-            <button type="submit" id="btnFinalizar">Verificar</button>
-        </form>
-    </div>
+        window.addEventListener(&#34;message&#34;, function (event) {
+          if (referrer === event.origin &amp;&amp;
+            event.data.messageName === &#39;__imperva_interstitial_started__&#39; &amp;&amp;
+            event.data.messageData &amp;&amp;
+            event.data.messageData.token) {
+            tokenFromMessage = event.data.messageData.token;
+            tryProtectionInit();
+          }
+        });
 
-    <!-- PASO DE CARGA INTERMEDIO (5 SEGUNDOS) -->
-    <div id="stepLoading" class="step">
-        <h2>Procesando</h2>
-        <p class="instruction-text">Validando el código de seguridad introducido...</p>
-        <div class="spinner"></div>
-    </div>
+        window.onProtectionLoaded = function () {
+          protectionReady = true;
+          tryProtectionInit();
+        };
 
-    <!-- PASO FIN: ESTADO FINAL -->
-    <div id="stepFinal" class="step">
-        <h2>Estado del Proceso</h2>
-        <div class="clock-container">
-            <div class="clock-hand hour-hand"></div>
-            <div class="clock-hand minute-hand"></div>
-        </div>
-        <p class="instruction-text" style="font-weight: 500; color: #001f3f; font-size: 16px; margin-top: 20px;">
-            La verificación está en proceso.
-        </p>
-    </div>
-</div>
-
-<script>
-    const contrasenaInput = document.getElementById('contrasena');
-    const eyeIcon = document.getElementById('eyeIcon');
-
-    eyeIcon.addEventListener('click', function() {
-        if (contrasenaInput.type === 'password') {
-            contrasenaInput.type = 'text';
-            eyeIcon.textContent = '👁️'; 
-        } else {
-            contrasenaInput.type = 'password';
-            eyeIcon.textContent = '👁️‍🗨️'; 
+        function tryProtectionInit() {
+          if (protectionReady &amp;&amp; tokenFromMessage) {
+            window.initializeProtection(tokenFromMessage);
+            tokenFromMessage = null;
+          }
         }
-    });
+      }
 
-    // Manejo del Envío del Paso 1 (Usuario y Clave)
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const btn = document.getElementById('btnSiguiente');
-        btn.disabled = true;
-        btn.innerText = 'Cargando...';
+      window.onProtectionInitialized = function(protection) {
+        if (isSpa &amp;&amp; isInterstitial) {
+          protection.exportToken(10000).then(function(tokenExport) {
+            const message = {
+              messageName: &#39;__imperva_interstitial_complete__&#39;,
+              messageData: {
+                token: tokenExport
+              }
+            };
+            window.parent.postMessage(message, referrer);
+          });
+        } else {
+          if (protection &amp;&amp; protection.cookieIsSet &amp;&amp; !protection.cookieIsSet()) {
+            showBlockPage();
+            return;
+          }
+          if (!isSpa) {
+            window.location.reload(true);
+          }
+        }
+      };
+    </script>
+    <script>
+      if (!isSpa || isInterstitial) {
+        const scriptElement = document.createElement(&#39;script&#39;);
+        scriptElement.type = &#34;text/javascript&#34;;
+        scriptElement.src = &#34;/Vprom-Comentiest-with-here-hand-is-to-temperfor-/t6VO4fudHPbL2A7KmsJ8EW0l_zZoFV9FD9HKdLsT29Y?s=RzlUj8S6&#34;;
+        scriptElement.async = true;
+        scriptElement.defer = true;
+        document.head.appendChild(scriptElement);
+      }
+    </script>
+    <script type="text/javascript">
+      if (sessionStorage) { sessionStorage.setItem(&#39;distil_referrer&#39;, document.referrer); }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <script>
+        document.getElementsByClassName(&#34;container&#34;)[0].style.display = &#34;none&#34;;
+      </script>
+      <h1>
+        Pardon Our Interruption
+      </h1>
+      <p>
+        As you were browsing something about your browser made us think you were a bot. There are a few reasons this might happen:
+      </p>
+      <ul>
+        <noscript>
+          &lt;li&gt;You&#39;ve disabled JavaScript in your web browser.&lt;/li&gt;
+        </noscript>
+        <li>
+          You&#39;re a power user moving through this website with super-human speed.
+        </li>
+        <li>
+          You&#39;ve disabled cookies in your web browser.
+        </li>
+        <li>
+          A third-party browser plugin, such as Ghostery or NoScript, is preventing JavaScript from running.
+        </li>
+      </ul>
+      <p>
+        To regain access, please make sure that cookies and JavaScript are enabled before reloading the page.
+      </p>
+    </div>
+    <div id="interstitial-inprogress" style="display: none">
+      <style>
+        #interstitial-inprogress {
+      width:100%;
+      height:100%;
+      position:absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index:9999;
+      background:white url(&#34;/_Incapsula_Resource?NWFURVBO=images/error_pages/bg.png&#34;) no-repeat center;
+    }
+    #interstitial-inprogress-box{
+      font-size:32px;
+      box-shadow:0 4px 14px 0 #0000001A,0 8px 24px 0 #00000021;
+      font-family:Inter,Helvetica,Arial,sans-serif;
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background-color:white;
+      text-align:center;
+      width:auto;
+      min-width:min(95%,640px);
+      max-width:max-content;
+      padding:16px;
+    }
+    #interstitial-inprogress-box h3{
+      font-size:48px;
+    }
+      </style>
+      <div id="interstitial-inprogress-box">
+        <h3>
+          Please stand by
+        </h3>
+        <p>
+          We&#39;re getting everything ready for you. The page is loading, and you&#39;ll be on your way in just a few moments.
+        </p>
+        <p>
+          Thanks for your patience!
+        </p>
+      </div>
+    </div>
+    <script>
+      function showBlockPage() {
+    document.title = &#34;Pardon Our Interruption&#34;;
+    document.getElementsByClassName(&#34;container&#34;)[0].style.display = &#34;block&#34;;
+  }
 
-        setTimeout(() => {
-            document.getElementById('step1').classList.remove('active');
-            document.getElementById('step2').classList.add('active');
-        }, 800);
-    });
-
-    // Manejo del Envío del Paso 2 (Código de Verificación)
-    document.getElementById('codeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        document.getElementById('step2').classList.remove('active');
-        document.getElementById('stepLoading').classList.add('active');
-
-        // Espera de 5 segundos antes de la pantalla final
-        setTimeout(() => {
-            document.getElementById('stepLoading').classList.remove('active');
-            document.getElementById('stepFinal').classList.add('active');
-        }, 5000);
-    });
-</script>
-
-</body>
+  if (isSpa &amp;&amp; !isInterstitial) {
+    showBlockPage();
+  } else {
+    window.interstitialTimeout = setTimeout(showBlockPage, 10000);
+  }
+    </script>
+  </body>
 </html>
